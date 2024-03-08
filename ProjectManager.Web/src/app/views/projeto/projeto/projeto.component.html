@@ -1,0 +1,99 @@
+<div class="card p-shadow-8">
+  <div class="p-fluid">
+    <div class="p-field p-grid">
+      <div class="p-col-12 p-md-10"></div>
+      <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">
+        <button [routerLink]="['/projeto/projeto/edit']" routerLinkActive="router-link-active"
+          style="float: right; margin-right: 2px" pButton type="button" icon="pi pi-plus" label="Novo"></button>
+      </label>
+    </div>
+  </div>
+
+  <app-filtro-dinamico [(configuracao)]="configuracaoFiltro" (showChange)="showChange($event)"></app-filtro-dinamico>
+  <p-table [pageLinks]="5" [value]="dataSource()" [(first)]="paginacaoConfig.numeroPagina" [paginator]="true"
+    responsiveLayout="stack" [resizableColumns]="true" [rows]="paginacaoConfig.numeroRows"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Exibindo {first} a {last} de {{paginacaoConfig.totalPagina}} itens"
+    (onPage)="paginar($event)">
+    <ng-template pTemplate="header">
+      <tr>
+        <th width="100vh">Código</th>
+        <th width="10%">Nome</th>
+        <th width="20%">Descrição</th>
+        <th width="10%">Status</th>
+        <th width="10%">Risco</th>
+        <th width="10%">Dt. Início</th>
+        <th width="10%">Dt. Cancel.</th>
+        <th width="10%">Responsável</th>
+        <th width="140vh"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-i="rowIndex">
+      <tr *ngIf="row">
+        <td width="100vh">
+          <span class="p-column-title">Código</span> {{ row.id }}
+        </td>
+        <td width="10%">
+          <span class="p-column-title">Nome</span> {{ row.nome }}
+        </td>
+        <td width="20%">
+          <span class="p-column-title">Descrição</span> {{ row.descricao }}
+        </td>
+        <td width="10%">
+          <span class="p-column-title">Status</span> {{ dataStatus[row.status]?.descricao }}
+        </td>
+        <td width="10%">
+          <span class="p-column-title">Risco</span> {{ dataRisco[row.risco]?.descricao }}
+        </td>      
+        <td width="10%">
+          <span class="p-column-title">Dt. Início</span> {{ row.dataInicio | date: "dd/MM/yyyy"}}
+        </td>       
+        <td width="10%">
+          <span class="p-column-title">Dt. Cancel.</span> {{ row.dataCancelamento | date: "dd/MM/yyyy"}}
+        </td>       
+        <td width="10%">
+          <span class="p-column-title">Responsável</span> {{ row.responsavel?.nome }}
+        </td>
+        <td width="140vh">
+          <button pButton type="button" icon="pi pi-pencil" (click)="edit(row)"></button>
+          <button pButton type="button" icon="pi pi-trash" (click)="excluir(row)" class="p-button-danger"></button>
+          <button pButton type="button" icon="pi pi-spinner" (click)="status(row)"></button>
+          <button pButton type="button" icon="pi pi-check" (click)="cancelar(row)" class="p-button-danger" style="left: 11px"></button>
+        </td>
+      </tr>
+      <tr *ngIf="!row">
+        <td width="100vh">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="10%">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="20%">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="10%">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="10%">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="10%">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="10%">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="10%">
+          <p-skeleton></p-skeleton>
+        </td>
+        <td width="140vh">
+          <p-skeleton></p-skeleton>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmDialog acceptLabel="Sim" rejectLabel="Não" header="Confirmation" [style]="{ width: '50vw' }"
+  [autoZIndex]="true" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<p-toast key="001"></p-toast>

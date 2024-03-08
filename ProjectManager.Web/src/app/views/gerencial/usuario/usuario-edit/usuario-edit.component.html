@@ -1,0 +1,108 @@
+<div class="card p-shadow-8">
+    <button style="float: right;" pButton type="button" icon="pi pi-arrow-left" label="Voltar" routerLink="/gerencial/usuario/" (click)="voltar()"></button>
+    <h4 style="text-align: center;font-family: auto;">Usuário</h4>
+    <form [formGroup]="formModel">
+        <div class="p-fluid">
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Login</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="text" formControlName="login" [ngClass]="{'ng-invalid ng-dirty' : !formModel.controls['login'].valid&&formModel.controls['login'].dirty}" placeholder="Login" pInputText>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['login'].valid">Este campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Senha</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="password" formControlName="senha" [ngClass]="{'ng-invalid ng-dirty' : !formModel.controls['senha'].valid&&formModel.controls['senha'].dirty}" placeholder="Senha" pInputText>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['senha'].valid">Este campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Nome</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="text" formControlName="nome" [ngClass]="{'ng-invalid ng-dirty' : !formModel.controls['nome'].valid&&formModel.controls['nome'].dirty}" placeholder="Nome" pInputText>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['nome'].valid">Este campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">CPF/CNPJ</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="text" formControlName="cpfCnpj" [ngClass]="{'ng-invalid ng-dirty' : !formModel.controls['cpfCnpj'].valid&&formModel.controls['cpfCnpj'].dirty}" placeholder="Cpf / Cnpj" pInputText>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['cpfCnpj'].valid">Este campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Alterar Senha</label>
+                <div class="p-col-12 p-md-10">
+                    <p-radioButton formControlName="alterarSenha" name="alterarSenha" value="1" label="Sim" inputId="alterarSenhaSim"></p-radioButton>
+                    <p-radioButton formControlName="alterarSenha" [style]="{'margin-left': '30px'}" name="alterarSenha" value="0" label="Nâo" inputId="alterarSenhaNao"></p-radioButton>
+                    <br>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['ativoId'].valid">Este campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Data cadastro</label>
+                <div class="p-col-12 p-md-10">
+                    <p-calendar formControlName="dataCadastro" [showIcon]="true" placeholder="Data de cadastro" dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Nº Celular</label>
+                <div class="p-col-12 p-md-10">
+                    <input maxlength="100" formControlName="celular" type="text" pInputText placeholder="Número do celular">
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Data de expiracão</label>
+                <div class="p-col-12 p-md-10">
+                    <p-calendar formControlName="dataExpiracao" [showIcon]="true" placeholder="Data de expiracão" dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Email verificado</label>
+                <div class="p-col-12 p-md-10">
+                    <p-radioButton formControlName="emailVerificado" name="emailVerificado" value="1" label="Sim" inputId="emailVerificadoSim"></p-radioButton>
+                    <p-radioButton formControlName="emailVerificado" [style]="{'margin-left': '30px'}" name="emailVerificado" value="0" label="Nâo" inputId="emailVerificadoNao"></p-radioButton>
+                    <br>
+                </div>
+            </div>
+
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Foto</label>
+                <div class="p-col-12 p-md-9">
+                    <p-fileUpload chooseLabel="Abrir" uploadLabel="Carregar" cancelLabel="Excluir" name="Base64" customUpload="true" (onClear)="onClear()" (uploadHandler)="onUpload($event)">
+                    </p-fileUpload>
+                </div>
+                <div class="p-col-12 p-md-2">
+                    <img *ngIf="formModel.value.fotoUrl" [src]="formModel.value.fotoUrl" height="120px" />
+                    <i *ngIf="!formModel.value.fotoUrl" class="pi pi-image" style="font-size: 80px;"></i>
+
+                </div>
+                <br>
+                <small class="p-invalid" *ngIf="submitted && !formModel.controls['fotoUrl'].valid">Este campo é obrigatório.</small>
+
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Ativo</label>
+                <div class="p-col-12 p-md-10">
+                    <p-radioButton formControlName="ativoId" name="ativoId" value="1" label="Ativo" inputId="ativoIdAtivo"></p-radioButton>
+                    <p-radioButton formControlName="ativoId" [style]="{'margin-left': '30px'}" name="ativoId" value="0" label="Inativo" inputId="ativoIdInativo"></p-radioButton>
+                    <br>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['ativoId'].valid">Este campo é obrigatório.</small>
+
+                </div>
+            </div>
+            <div class="p-fluid p-formgrid p-grid">
+                <div class="p-field p-col-12 p-md-3"></div>
+                <div class="p-field p-col-12 p-md-6">
+                    <p-button *ngIf="!salvando" (click)="salvar()" icon="pi pi-save" iconPos="right" label={{nomeBotao}} styleClass="p-button-rounded"></p-button>
+                    <p-button *ngIf="salvando" icon="pi pi-spin pi-spinner" iconPos="right" label={{nomeBotao}} styleClass="p-button-rounded"></p-button>
+                </div>
+            </div>
+        </div>        
+    </form>
+</div>
+
+
+<p-confirmDialog acceptLabel="Sim" rejectLabel="Não" header="Confirmation" [style]="{width: '50vw'}" [autoZIndex]="true" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<p-toast key="001"></p-toast>

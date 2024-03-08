@@ -1,0 +1,41 @@
+<p-dialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [(visible)]="show" [draggable]="false" [modal]="true"
+    (onHide)="back()" [style]="{width: '70vw', minWidth: '60vw'}" [closable]="false">
+    <button style="float: right;" pButton type="button" label="Voltar" (click)="back()"
+        icon="pi pi-arrow-left"></button>
+    <h4 style="text-align: center;font-family: auto;">Projeto: {{data.title}}</h4>
+    <form [formGroup]="formModel">
+        <div class="p-fluid">                        
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Responsável</label>
+                <div class="p-col-12 p-md-10">
+                    <p-dropdown [options]="DsResponsavel" [showClear]="true" formControlName="responsavelId"
+                        optionLabel="descricao" [filter]="true" filterBy="descricao" placeholder="Situação da parcela">
+                    </p-dropdown>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['responsavelId'].valid">Este
+                        campo é obrigatório.</small>
+                </div>
+            </div>   
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Situação</label>
+                <div class="p-col-12 p-md-10">
+                    <p-radioButton formControlName="ativoId" name="ativoId" value="1" label="Ativo"
+                        inputId="ativoIdAtivo"></p-radioButton>
+                    <p-radioButton formControlName="ativoId" [style]="{ 'margin-left': '30px' }" name="ativoId"
+                        value="0" label="Inativo" inputId="ativoIdInativo"></p-radioButton>
+                    <br />
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['ativoId'].valid">Este campo é
+                        obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-fluid p-formgrid p-grid">
+                <div class="p-field p-col-12 p-md-3"></div>
+                <div class="p-field p-col-12 p-md-6">
+                    <p-button *ngIf="!salvando" (click)="salvar()" icon="pi pi-save" iconPos="right"
+                        label="Salvar e Continuar" styleClass="p-button-rounded"></p-button>
+                    <p-button *ngIf="salvando" icon="pi pi-spin pi-spinner" iconPos="right" label="Salvar e Continuar"
+                        styleClass="p-button-rounded"></p-button>
+                </div>
+            </div>   
+        </div>
+    </form>
+</p-dialog>

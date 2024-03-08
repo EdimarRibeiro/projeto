@@ -1,0 +1,24 @@
+<div class="login-body">
+  <div class="login-panel"></div>
+  <div class="login-content">
+    <form [formGroup]="modelForm">
+      <img src="./assets/layout/images/logo.jpg" alt="ProjectManager" />
+
+      <p>Bem-vindo, use suas credenciais para acessar ao sistema</p>
+
+      <div class="login-input-wrapper">
+        <input formControlName="username" pInputText type="text" autocomplete="off" placeholder="Email">
+      </div>
+
+      <div class="login-input-wrapper">
+        <input formControlName="password" pPassword type="password" autocomplete="off" placeholder="Senha">
+      </div>
+      <div style="width: 500px">
+        <p-messages [(value)]="errors" [closable]="false"></p-messages>
+      </div>
+      <div>
+        <button pButton type="button" label="Entrar" (click)="login()"></button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,165 @@
+<div class="card p-shadow-8">
+    <button style="float: right;" pButton type="button" icon="pi pi-arrow-left" label="Voltar"
+        routerLink="/projeto/projeto"></button>
+    <h4 style="text-align: center;font-family: auto;">Projeto</h4>
+    <form [formGroup]="formModel">
+        <div class="p-fluid">
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Nome</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="text" pInputText formControlName="nome" placeholder="Nome do projeto"/>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['nome'].valid">Este campo é
+                        obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Descrição</label>
+                <div class="p-col-12 p-md-10">
+                    <input type="text" pInputText formControlName="descricao" placeholder="Descrição"/>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['descricao'].valid">Este campo é
+                        obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Data inicial</label>
+                <div class="p-col-12 p-md-10">
+                    <p-calendar formControlName="dataInicio" [showIcon]="true" placeholder="Data inicial"
+                        dateFormat="dd/mm/yy"></p-calendar>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['dataInicio'].valid">Este campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Data Termino</label>
+                <div class="p-col-12 p-md-10">
+                    <p-calendar formControlName="dataTermino" [showIcon]="true" placeholder="Data término"
+                        dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Data Cancel.</label>
+                <div class="p-col-12 p-md-10">
+                    <p-calendar formControlName="dataCancelamento" [showIcon]="true" placeholder="Data cancelamento"
+                        dateFormat="dd/mm/yy"></p-calendar>
+                </div>
+            </div>
+
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Status</label>
+                <div class="p-col-12 p-md-10">
+                    <p-dropdown [options]="DsStatus" [showClear]="true" formControlName="status" optionLabel="descricao"
+                        [filter]="true" filterBy="descricao" placeholder="Status do projeto">
+                    </p-dropdown>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['status'].valid">Este
+                        campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Risco</label>
+                <div class="p-col-12 p-md-10">
+                    <p-dropdown [options]="DsRisco" [showClear]="true" formControlName="risco" optionLabel="descricao"
+                        [filter]="true" filterBy="descricao" placeholder="Risco do projeto">
+                    </p-dropdown>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['risco'].valid">Este
+                        campo é obrigatório.</small>
+                </div>
+            </div>
+            <div class="p-field p-grid">
+                <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Responsável</label>
+                <div class="p-col-12 p-md-8">
+                    <p-autoComplete formControlName="responsavelId" [suggestions]="resultsResponsavel"
+                        (completeMethod)="searchResponsavel($event)" field="descricao" [forceSelection]="true"
+                        placeholder="Pesquisar Responsavel">
+                        <ng-template let-item pTemplate="item">
+                            <div disabled="item.ativoId !== 1" class="p-helper-clearfix">
+                                {{ item.descricao }}
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <small class="p-invalid" *ngIf="submitted && !formModel.controls['responsavelId'].valid">
+                        Este campo é obrigatório.</small>
+                </div>
+                <div class="p-col-12 p-md-2">
+                    <p-button (click)="criarResponsavel()" icon="pi pi-plus" iconPos="right" styleClass="p-button-rounded"></p-button>
+                </div>
+            </div>
+        </div>
+        <div class="p-field p-grid">
+            <label class="p-col-12 p-mb-2 p-md-2 p-mb-md-0">Situação</label>
+            <div class="p-col-12 p-md-10">
+                <p-radioButton formControlName="ativoId" name="ativoId" value="1" label="Ativo"
+                    inputId="ativoIdAtivo"></p-radioButton>
+                <p-radioButton formControlName="ativoId" [style]="{ 'margin-left': '30px' }" name="ativoId" value="0"
+                    label="Inativo" inputId="ativoIdInativo"></p-radioButton>
+                <br />
+                <small class="p-invalid" *ngIf="submitted && !formModel.controls['ativoId'].valid">Este campo é
+                    obrigatório.</small>
+            </div>
+        </div>
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-3"></div>
+            <div class="p-field p-col-12 p-md-6">
+                <p-button *ngIf="!salvando" (click)="salvar()" icon="pi pi-save" iconPos="right" label="{{ nomeBotao }}"
+                    styleClass="p-button-rounded"></p-button>
+                <p-button *ngIf="salvando" icon="pi pi-spin pi-spinner" iconPos="right" label="{{ nomeBotao }}"
+                    styleClass="p-button-rounded"></p-button>
+            </div>
+        </div>
+
+        <p-tabView #tabGroup *ngIf="formModel.value.edit">
+            <p-tabPanel header="Responsavel">
+                <div class="p-grid">
+                    <div class="p-col">
+                        <h4 style="font-family: auto">Responsável</h4>
+                    </div>
+                    <div style="padding-top: 23px">
+                        <div style="column-count: 1">
+                            <button pButton type="button" label="Novo" icon="pi pi-check"
+                                (click)="adicionaResponsavel(formModel.value.id)"></button>
+                        </div>
+                    </div>
+                </div>
+                <p-table [value]="dataSourceResponsavel" responsiveLayout="stack" [resizableColumns]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Id</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Situação</th>
+                            <th width="96vh"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-row let-i="rowIndex">
+                        <tr>
+                            <td width="15%">
+                                <span class="p-column-title">Id</span>
+                                {{ row.id }}
+                            </td>
+                            <td width="20%">
+                                <span class="p-column-title">Nome</span>
+                                {{ row.responsavel?.nome }}
+                            </td>
+                            <td width="20%">
+                                <span class="p-column-title">Email</span>
+                                {{ row.responsavel?.email }}
+                            </td>
+                            <td width="15%">
+                                <span class="p-column-title">Situação</span>
+                                <span [class]="'customer-badge situacao-' + row.ativoId">
+                                    {{row.ativoId === 1 ? 'Ativo' : 'Inativo'}}
+                                </span>
+                            </td>
+                            <td width="96vh">
+                                <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                                    (click)="excluirResponsavel(row)" style="float: right"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+        </p-tabView>
+    </form>
+</div>
+
+<p-confirmDialog acceptLabel="Sim" rejectLabel="Não" header="Confirmation" [style]="{width: '50vw'}" [autoZIndex]="true"
+    rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<p-toast key="001"></p-toast>
