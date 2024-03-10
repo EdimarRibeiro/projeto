@@ -55,7 +55,8 @@ namespace ProjectManager.Web
                 opts.SupportedUICultures = supportedCultures;
             });
 
-            var connectionString = Configuration.GetConnectionString("ProjectManagerWeb");
+            var configuration = Configuration.GetSection("ConnectionStrings");
+            var connectionString = configuration["ProjectManagerWeb"];
 
             MigrationRunner.Up(connectionString);
 
