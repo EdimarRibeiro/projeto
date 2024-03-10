@@ -23,8 +23,7 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 appsettings.json
-Startup.cs
-src/environments/*
+src
 
 # misc
 /.angular/cache
