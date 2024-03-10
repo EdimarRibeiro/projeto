@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 
 namespace ProjectManager.Web
 {
@@ -56,6 +57,8 @@ namespace ProjectManager.Web
             });
 
             var connectionString = Configuration.GetConnectionString("ConnectionString");
+            if (string.IsNullOrEmpty(connectionString))
+                connectionString = Configuration.GetValue<string>("ConnectionString");
 
             MigrationRunner.Up(connectionString);
 
@@ -67,7 +70,7 @@ namespace ProjectManager.Web
 
             ConfigureRepositoriesClasses(services);
             ConfigureBusinessClasses(services);
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1",
@@ -83,7 +86,7 @@ namespace ProjectManager.Web
             {
                 options.CustomSchemaIds(x => x.FullName);
             });
-            
+
             var testaEstrutura = services.BuildServiceProvider().GetService<DbProjectManagerContext>();
             testaEstrutura.TestarTodasTabelas();
 
@@ -97,7 +100,7 @@ namespace ProjectManager.Web
         {
             services.AddScoped(typeof(IRepositoryBase<>), typeof(_RepositoryBase<>));
 
-            
+
             services.AddScoped<ISimNaoRepository, SimNaoRepository>();
             services.AddScoped<IProjetoRepository, ProjetoRepository>();
             services.AddScoped<IProjetoResponsavelRepository, ProjetoResponsavelRepository>();
@@ -119,8 +122,30 @@ namespace ProjectManager.Web
         {
             var tokenConfigurations = new TokenConfigurations();
 
-            new ConfigureFromConfigurationOptions<TokenConfigurations>(Configuration.GetSection("TokenConfigurations"))
-                .Configure(tokenConfigurations);
+            IConfigurationSection conf = Configuration.GetSection("TokenConfigurations");
+            if (conf != null && string.IsNullOrEmpty(conf.GetValue<string>("SymmetricSecurityKey")))
+            {
+                var token = new
+                {
+                    TokenConfigurations = new
+                    {
+                        SymmetricSecurityKey = Configuration.GetValue<string>("SymmetricSecurityKey"),
+                        TokenLifetimeInMinutes = Configuration.GetValue<int>("TokenLifetimeInMinutes"),
+                        Audience = Configuration.GetValue<string>("Audience"),
+                        Issuer = Configuration.GetValue<string>("Issuer")
+                    }
+                };
+                string jsonString = JsonSerializer.Serialize(token);
+                byte[] utf8Bytes = Encoding.UTF8.GetBytes(jsonString);
+
+                using (MemoryStream stream = new MemoryStream(utf8Bytes))
+                {
+                    IConfiguration confs = new ConfigurationBuilder().AddJsonStream(stream).Build();
+                    conf = confs.GetSection("TokenConfigurations");
+                }
+
+            }
+            new ConfigureFromConfigurationOptions<TokenConfigurations>(conf).Configure(tokenConfigurations);
 
             services.AddSingleton(tokenConfigurations);
 
@@ -188,7 +213,7 @@ namespace ProjectManager.Web
                 if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value) && !context.Request.Path.Value.StartsWith("/api"))
                 {
                     context.Request.Path = "/index.html";
-                    context.Response.StatusCode = 200; 
+                    context.Response.StatusCode = 200;
                     await next();
                 }
             });
@@ -201,7 +226,7 @@ namespace ProjectManager.Web
             {
                 c.SwaggerEndpoint("v1/swagger.json", "Project Manager API");
             });
-            
+
 
             app.UseMvc();
         }
