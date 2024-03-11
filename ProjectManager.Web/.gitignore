@@ -45,3 +45,6 @@ wwwroot
 .DS_Store
 Thumbs.db
 /GeradorClasses
+/config
+*Docker*
+*.yml
